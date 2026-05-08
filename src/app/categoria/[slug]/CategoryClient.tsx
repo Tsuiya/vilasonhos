@@ -6,6 +6,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/mock-data";
 import { MessageCircle, SlidersHorizontal, ChevronDown, X, ShoppingBag } from "lucide-react";
+import { trackViewCategory, trackWhatsAppClick } from "@/lib/tracking";
+import { useEffect } from "react";
 
 interface CategoryClientProps {
   category: { slug: string; name: string; description: string; image: string };
@@ -25,7 +27,12 @@ export default function CategoryClient({ category, initialProducts }: CategoryCl
   const availableSizes = ["1", "2", "3", "4", "6", "8", "10", "P", "M", "G"];
   const whatsappNumber = "5516991802984";
 
+  useEffect(() => {
+    trackViewCategory(category.name);
+  }, [category]);
+
   const handleWhatsAppHelp = () => {
+    trackWhatsAppClick("Category Help Button", { category: category.name });
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Olá! Preciso de ajuda para escolher roupinhas na categoria " + category.name + ".")}`, "_blank");
   };
 

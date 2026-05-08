@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/lib/mock-data";
 import { MessageCircle, Truck, Clock, Star, Heart, CheckCircle2, ChevronRight, AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { trackViewProduct, trackSelectSize, trackWhatsAppClick } from "@/lib/tracking";
+import { useEffect } from "react";
 
 interface ProductClientProps {
   product: Product;
@@ -17,6 +19,10 @@ export default function ProductClient({ product, relatedProducts }: ProductClien
   const [activeImage, setActiveImage] = useState(0);
   const [showError, setShowError] = useState(false);
 
+  useEffect(() => {
+    trackViewProduct(product);
+  }, [product]);
+
   const whatsappNumber = "5516991802984";
 
   const handleWhatsApp = () => {
@@ -26,6 +32,13 @@ export default function ProductClient({ product, relatedProducts }: ProductClien
       return;
     }
     
+    trackWhatsAppClick("Product Page CTA", {
+      product_name: product.name,
+      product_id: product.id,
+      size: selectedSize,
+      category: product.categoryName
+    });
+
     const message = `Olá! Tenho interesse no produto ${product.name} no tamanho ${selectedSize}.`;
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
   };
@@ -148,7 +161,10 @@ export default function ProductClient({ product, relatedProducts }: ProductClien
                 {product.sizes.map((size) => (
                   <button
                     key={size}
-                    onClick={() => setSelectedSize(size)}
+                    onClick={() => {
+                      setSelectedSize(size);
+                      trackSelectSize(size, product.name);
+                    }}
                     className={`
                       py-3 rounded-xl border-2 font-bold transition-all flex items-center justify-center
                       ${selectedSize === size 

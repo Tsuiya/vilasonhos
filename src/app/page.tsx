@@ -4,11 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MessageCircle, ShoppingBag, Truck, Tag, Clock, Star, MapPin, Moon } from "lucide-react";
+import { trackWhatsAppClick, trackCtaClick } from "@/lib/tracking";
 
 export default function Home() {
   const whatsappNumber = "5516991802984"; // Placeholder for Ibitinga number
 
-  const openWhatsApp = (message = "Olá! Gostaria de saber mais sobre as roupinhas da Vila dos Sonhos.") => {
+  const openWhatsApp = (message = "Olá! Gostaria de saber mais sobre as roupinhas da Vila dos Sonhos.", buttonLocation = "Home") => {
+    trackWhatsAppClick(buttonLocation);
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -40,7 +42,7 @@ export default function Home() {
             <a href="#sobre" className="hover:text-accent-foreground transition-colors">Sobre Nós</a>
           </nav>
           <button
-            onClick={() => openWhatsApp()}
+            onClick={() => openWhatsApp(undefined, "Header Navbar")}
             className="bg-[#25D366] hover:bg-[#20bd5a] text-white px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-all shadow-sm hover:shadow-md text-sm"
           >
             <MessageCircle className="w-4 h-4" />
@@ -69,14 +71,15 @@ export default function Home() {
                 Roupinhas confortáveis, estilosas e com preço que cabe no bolso para crianças de 1 a 10 anos em Ibitinga/SP.
               </motion.p>
               <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <a
-                  href="#produtos"
+                <Link
+                  href="/categoria/meninas"
+                  onClick={() => trackCtaClick("Ver novidades", "Hero", "Home")}
                   className="bg-primary-foreground text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-foreground transition-colors shadow-lg shadow-primary-foreground/20 text-center"
                 >
                   Ver novidades
-                </a>
+                </Link>
                 <button
-                  onClick={() => openWhatsApp()}
+                  onClick={() => openWhatsApp(undefined, "Hero CTA")}
                   className="bg-[#25D366] hover:bg-[#20bd5a] text-white px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-[#25D366]/20"
                 >
                   <MessageCircle className="w-5 h-5" />
@@ -213,7 +216,7 @@ export default function Home() {
               <p className="text-muted-foreground">As peças mais amadas que acabaram de chegar na loja.</p>
             </div>
             <button
-              onClick={() => openWhatsApp("Quais são as outras novidades da semana?")}
+              onClick={() => openWhatsApp("Quais são as outras novidades da semana?", "Novidades Header CTA")}
               className="hidden md:flex text-primary-foreground font-semibold items-center gap-2 hover:underline"
             >
               Ver todas as peças <ShoppingBag className="w-4 h-4" />
@@ -263,7 +266,7 @@ export default function Home() {
 
           <div className="mt-10 text-center md:hidden">
             <button
-              onClick={() => openWhatsApp("Quais são as outras novidades da semana?")}
+              onClick={() => openWhatsApp("Quais são as outras novidades da semana?", "Novidades Mobile CTA")}
               className="text-primary-foreground font-semibold inline-flex items-center gap-2 hover:underline"
             >
               Ver todas as peças <ShoppingBag className="w-4 h-4" />
@@ -350,7 +353,7 @@ export default function Home() {
               Mande um "Oi" no nosso WhatsApp e seja a primeira a saber quando chegam as novas coleções!
             </p>
             <button
-              onClick={() => openWhatsApp("Olá! Quero receber as novidades e promoções da loja.")}
+              onClick={() => openWhatsApp("Olá! Quero receber as novidades e promoções da loja.", "Final CTA Section")}
               className="bg-[#25D366] hover:bg-[#20bd5a] text-white px-10 py-5 rounded-full font-bold text-xl inline-flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl shadow-[#25D366]/30"
             >
               <MessageCircle className="w-7 h-7" />
@@ -375,7 +378,7 @@ export default function Home() {
               <a href="#" className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
               </a>
-              <button onClick={() => openWhatsApp()} className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-colors">
+              <button onClick={() => openWhatsApp(undefined, "Footer Social WhatsApp")} className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#25D366] hover:text-white transition-colors">
                 <MessageCircle className="w-5 h-5" />
               </button>
             </div>
@@ -384,10 +387,10 @@ export default function Home() {
           <div>
             <h4 className="font-bold text-lg mb-6 text-white/90">Links Rápidos</h4>
             <ul className="space-y-3">
-              <li><a href="#categorias" className="text-white/70 hover:text-white transition-colors">Categorias</a></li>
-              <li><a href="#produtos" className="text-white/70 hover:text-white transition-colors">Novidades</a></li>
-              <li><a href="#sobre" className="text-white/70 hover:text-white transition-colors">Sobre Nós</a></li>
-              <li><button onClick={() => openWhatsApp()} className="text-white/70 hover:text-white transition-colors">Falar com Atendente</button></li>
+              <li><Link href="/categoria/meninas" className="text-white/70 hover:text-white transition-colors">Meninas</Link></li>
+              <li><Link href="/categoria/meninos" className="text-white/70 hover:text-white transition-colors">Meninos</Link></li>
+              <li><Link href="/categoria/bebes" className="text-white/70 hover:text-white transition-colors">Bebês</Link></li>
+              <li><button onClick={() => openWhatsApp(undefined, "Footer Quick Links")} className="text-white/70 hover:text-white transition-colors">Falar com Atendente</button></li>
             </ul>
           </div>
 
@@ -413,10 +416,10 @@ export default function Home() {
 
       {/* FLOATING WHATSAPP BUTTON */}
       <motion.button
-        initial={{ scale: 0 }}
+        initial={{ scale: 1 }}
         animate={{ scale: 1 }}
         transition={{ delay: 1, type: "spring", stiffness: 200 }}
-        onClick={() => openWhatsApp()}
+        onClick={() => openWhatsApp(undefined, "Floating Global Button")}
         className="fixed bottom-6 right-6 md:bottom-10 md:right-10 w-16 h-16 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full flex items-center justify-center shadow-2xl z-50 transition-transform hover:scale-110"
         aria-label="Falar no WhatsApp"
       >

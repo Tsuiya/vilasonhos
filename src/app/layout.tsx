@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
+import TrackingProvider from "@/components/TrackingProvider";
+import CookieBanner from "@/components/CookieBanner";
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -22,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${nunito.variable} antialiased scroll-smooth`}>
       <body className="min-h-screen flex flex-col font-sans bg-background text-foreground">
+        <TrackingProvider />
         {children}
+        <CookieBanner />
       </body>
     </html>
   );
